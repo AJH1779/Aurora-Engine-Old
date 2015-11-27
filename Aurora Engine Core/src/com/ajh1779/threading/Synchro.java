@@ -30,7 +30,7 @@ public abstract class Synchro implements Runnable {
     public Synchro(String name) {
         this.name = name;
         dependent = null;
-        LOG.info("Created new independent Synchro");
+        LOG.log(Level.INFO, "New Independent Synchro \"{0}\" Created", name);
     }
     /**
      * Returns a new thread that is running so long as the provided thread is
@@ -40,7 +40,9 @@ public abstract class Synchro implements Runnable {
     public Synchro(String name, Synchro dependent) {
         this.name = name;
         this.dependent = dependent;
-        LOG.log(Level.INFO, "Created new dependent Synchro({0})", dependent);
+        LOG.log(Level.INFO,
+                "New Dependent Synchro \"{0}\" Created, dependent on Synchro \"{1}\"",
+                new Object[]{name, dependent});
     }
     private final String name;
     private final Synchro dependent;
@@ -59,7 +61,7 @@ public abstract class Synchro implements Runnable {
         halted = false;
         Thread thread = new Thread(this, this.name);
         thread.start();
-        LOG.log(Level.INFO, "Created New Thread: {0}", this.name);
+        LOG.log(Level.INFO, "Started New Synchro Thread \"{0}\"", this.name);
         return thread;
     }
     /**
@@ -74,7 +76,8 @@ public abstract class Synchro implements Runnable {
         Thread thread = new Thread(this, this.name);
         thread.setPriority(priority);
         thread.start();
-        LOG.log(Level.INFO, "Created New Thread with Priority: {0} priority {1}",
+        LOG.log(Level.INFO,
+                "Started New Synchro Thread \"{0}\" with Priority {1}",
                 new Object[]{this.name, priority});
         return thread;
     }
@@ -95,12 +98,14 @@ public abstract class Synchro implements Runnable {
                 condition.await();
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(Synchro.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE,
+                "Synchro \"{0}\" interrupted whilst waiting for \"{1}\" to start. " +
+                "Synchro \"{1}\" may have not started! Exception: \"{2}\"",
+                new Object[]{this.name, synchro.name, ex});
         } finally {
             lock.unlock();
         }
-        LOG.log(Level.INFO, "Synchro \"{0}\" is resuming after \"{1}\" started.",
-                new Object[]{this.name, synchro.name});
+        LOG.log(Level.INFO, "Synchro \"{0}\" is now resuming.", this.name);
     }
     /**
      * Holds this thread until the specified thread has stopped running.
@@ -115,12 +120,14 @@ public abstract class Synchro implements Runnable {
                 condition.await();
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(Synchro.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE,
+                "Synchro \"{0}\" interrupted whilst waiting for \"{1}\" to stop. " +
+                "Synchro \"{1}\" may have not stoppped! Exception: \"{2}\"",
+                new Object[]{this.name, synchro.name, ex});
         } finally {
             lock.unlock();
         }
-        LOG.log(Level.INFO, "Synchro \"{0}\" is resuming after \"{1}\" stopped.",
-                new Object[]{this.name, synchro.name});
+        LOG.log(Level.INFO, "Synchro \"{0}\" is now resuming.", this.name);
     }
     /**
      * Safely closes the thread.
