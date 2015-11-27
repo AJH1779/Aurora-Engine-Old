@@ -41,6 +41,12 @@ public final class Properties {
         return file;
     }
     
+    /**
+     * Creates a new properties file for the specified program, named and
+     * versioned.
+     * @param prog_name
+     * @param prog_version 
+     */
     public Properties(String prog_name, String prog_version) {
         this.prog_name = prog_name;
         this.prog_version = prog_version;
