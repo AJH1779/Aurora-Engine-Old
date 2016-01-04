@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.math;
+package com.auroraengine.math;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 import java.util.Arrays;
 
 /**
  *
  * @author Arthur
  */
-public final class LDRef {
+public final class HDRef {
     // The Static Methods
-    private static final float[] IDENTITY = new float[]
-    {1f, 0f, 0f, 0f,  0f, 1f, 0f, 0f,  0f, 0f, 1f, 0f,  0f, 0f, 0f, 1f};
-    private static final float[] ZERO = new float[16];
+    private static final double[] IDENTITY = new double[]
+    {1., 0., 0., 0.,  0., 1., 0., 0.,  0., 0., 1., 0.,  0., 0., 0., 1.};
+    private static final double[] ZERO = new double[16];
     
     /**
      * Performs the matrix multiplication of ref1 on ref2, returning the result
@@ -27,7 +27,7 @@ public final class LDRef {
      * @param ref2 The second reference frame
      * @return The final reference frame
      */
-    public static LDRef mult(LDRef ref1, LDRef ref2) {
+    public static HDRef mult(HDRef ref1, HDRef ref2) {
         return mult(ref1, ref2, null);
     }
     /**
@@ -38,8 +38,8 @@ public final class LDRef {
      * @param target The target reference frame
      * @return The final reference frame
      */
-    public static LDRef mult(LDRef ref1, LDRef ref2, LDRef target) {
-        float[] d = new float[16];
+    public static HDRef mult(HDRef ref1, HDRef ref2, HDRef target) {
+        double[] d = new double[16];
         d[ 0] = ref1.dat[0] * ref2.dat[0]  + ref1.dat[4] * ref2.dat[1]  + ref1.dat[8]  * ref2.dat[2];
         d[ 1] = ref1.dat[1] * ref2.dat[0]  + ref1.dat[5] * ref2.dat[1]  + ref1.dat[9]  * ref2.dat[2];
         d[ 2] = ref1.dat[2] * ref2.dat[0]  + ref1.dat[6] * ref2.dat[1]  + ref1.dat[10] * ref2.dat[2];
@@ -53,24 +53,24 @@ public final class LDRef {
         d[13] = ref1.dat[1] * ref2.dat[12] + ref1.dat[5] * ref2.dat[13] + ref1.dat[9]  * ref2.dat[14] + ref1.dat[13];
         d[14] = ref1.dat[2] * ref2.dat[12] + ref1.dat[6] * ref2.dat[13] + ref1.dat[10] * ref2.dat[14] + ref1.dat[14];
         d[15] = 1.0f;
-        return target != null ? target.set(d) : new LDRef(d);
+        return target != null ? target.set(d) : new HDRef(d);
     }
     
     // The Local Methods
     /**
      * Creates a new reference frame which performs no transformation.
      */
-    public LDRef() { identity(); }
+    public HDRef() { identity(); }
     /**
      * Creates a new reference frame translated by the given vector.
      * @param vec The translation vector
      */
-    public LDRef(LDVec vec) { set(vec); }
+    public HDRef(HDVec vec) { set(vec); }
     /**
      * Creates a new reference frame rotated by the given angle
      * @param ang The rotation angle
      */
-    public LDRef(LDAng ang) { set(ang); }
+    public HDRef(HDAng ang) { set(ang); }
     /**
      * Creates a new reference frame, such that the three provided vectors form
      * the X, Y, Z basis for the space.
@@ -80,7 +80,7 @@ public final class LDRef {
      * @param vecB Position Vector B
      * @param vecC Position Vector C
      */
-    public LDRef(LDVec vecA, LDVec vecB, LDVec vecC) { set(vecA, vecB, vecC); }
+    public HDRef(HDVec vecA, HDVec vecB, HDVec vecC) { set(vecA, vecB, vecC); }
     /**
      * Creates a new reference frame depending on the number of vectors provided.
      * If one is provided, the new reference frame is translated by the given
@@ -89,23 +89,23 @@ public final class LDRef {
      * Otherwise, an <code>IllegalArgumentException</code> is thrown.
      * @param vecs The vectors
      */
-    public LDRef(LDVec[] vecs) { set(vecs); }
+    public HDRef(HDVec[] vecs) { set(vecs); }
     /**
      * Creates a new reference frame with the provided column-major 4x4 matrix
-     * given as a 16 float array.
+     * given as a 16 double array.
      * The matrix given should be a special orthogonal affine matrix.
      * @param matrix The matrix.
      */
-    public LDRef(float[] matrix) { set(matrix); }
+    public HDRef(double[] matrix) { set(matrix); }
     /**
      * Creates a new reference frame which is a duplicate of the provided frame.
      * @param ref The frame to copy
      */
-    public LDRef(LDRef ref) { set(ref); }
-    private final float[] dat = new float[16];
-    private final FloatBuffer buffer = ByteBuffer.allocateDirect(16 * Float.BYTES)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer();
-    private final FloatBuffer read_only = buffer.asReadOnlyBuffer();
+    public HDRef(HDRef ref) { set(ref); }
+    private final double[] dat = new double[16];
+    private final DoubleBuffer buffer = ByteBuffer.allocateDirect(16 * Double.BYTES)
+            .order(ByteOrder.nativeOrder()).asDoubleBuffer();
+    private final DoubleBuffer read_only = buffer.asReadOnlyBuffer();
     private volatile boolean modified = true;
     
     /**
@@ -114,7 +114,7 @@ public final class LDRef {
      * @param vec The translation vector
      * @return This
      */
-    public LDRef set(LDVec vec) {
+    public HDRef set(HDVec vec) {
         identity();
         dat[12] = vec.X(); dat[13] = vec.Y(); dat[14] = vec.Z();
         return this;
@@ -125,7 +125,7 @@ public final class LDRef {
      * @param ang The rotation angle
      * @return This
      */
-    public LDRef set(LDAng ang) {
+    public HDRef set(HDAng ang) {
         zero();
         dat[ 0] = ang.cos() + ang.X() * ang.X() * (1 - ang.cos());
         dat[ 1] = ang.Y() * ang.X() * (1 - ang.cos()) + ang.Z() * ang.sin();
@@ -153,13 +153,13 @@ public final class LDRef {
      * @param vecC Position Vector C
      * @return This
      */
-    public LDRef set(LDVec vecA, LDVec vecB, LDVec vecC) {
-        LDVec z = new LDVec(vecB).negTranslate(vecA);
-        LDVec y = z.cross(new LDVec(vecC).negTranslate(vecA));
-        LDVec x = y.cross(z).normalise();
+    public HDRef set(HDVec vecA, HDVec vecB, HDVec vecC) {
+        HDVec z = new HDVec(vecB).negTranslate(vecA);
+        HDVec y = z.cross(new HDVec(vecC).negTranslate(vecA));
+        HDVec x = y.cross(z).normalise();
         y.normalise(); z.normalise();
         
-        set(new float[]{
+        set(new double[]{
             x.X(), x.Y(), x.Z(), 0.0f,
             y.X(), y.Y(), y.Z(), 0.0f,
             z.X(), z.Y(), z.Z(), 0.0f,
@@ -178,7 +178,7 @@ public final class LDRef {
      * @param vecs The vectors
      * @return This
      */
-    public LDRef set(LDVec[] vecs) {
+    public HDRef set(HDVec[] vecs) {
         switch (vecs.length) {
             case 1:
                 return set(vecs[0]);
@@ -190,12 +190,12 @@ public final class LDRef {
     }
     /**
      * Sets the reference frame to be described by the provided column-major
-     * 4x4 matrix given as a 16 float array.
+     * 4x4 matrix given as a 16 double array.
      * The matrix given should be a special orthogonal affine matrix.
      * @param matrix The matrix
      * @return This 
      */
-    public LDRef set(float[] matrix) {
+    public HDRef set(double[] matrix) {
         if(matrix.length == dat.length) {
             System.arraycopy(matrix, 0, dat, 0, 16); modified = true;
         } else { throw new IllegalArgumentException("Array must be of length 16! Found " + matrix.length + "."); }
@@ -206,7 +206,7 @@ public final class LDRef {
      * @param ref The frame to copy
      * @return This
      */
-    public LDRef set(LDRef ref) {
+    public HDRef set(HDRef ref) {
         return set(ref.dat);
     }
     
@@ -214,20 +214,20 @@ public final class LDRef {
      * Sets this to the identity reference frame, then returns this.
      * @return This
      */
-    public LDRef identity() { return set(IDENTITY); }
+    public HDRef identity() { return set(IDENTITY); }
     /**
      * Sets this to the zero reference frame, then returns this.
      * @return This
      */
-    private LDRef zero() { return set(ZERO); }
+    private HDRef zero() { return set(ZERO); }
     /**
      * Sets this to its inverse. Note this expolits the fact this matrix is
      * a special orthogonal affine matrix, and so does not transform arbitrary
      * matrix arguments.
      * @return This
      */
-    public LDRef invert() {
-        float[] d = new float[16];
+    public HDRef invert() {
+        double[] d = new double[16];
         d[0] = dat[0]; d[1] = dat[4]; d[2] = dat[8];
         d[4] = dat[1]; d[5] = dat[5]; d[6] = dat[9];
         d[8] = dat[2]; d[9] = dat[6]; d[10] = dat[10];
@@ -245,7 +245,7 @@ public final class LDRef {
      * @param vec The translation vector
      * @return This
      */
-    public LDRef translateLocally(LDVec vec) {
+    public HDRef translateLocally(HDVec vec) {
         dat[12] += vec.X();
         dat[13] += vec.Y();
         dat[14] += vec.Z();
@@ -259,7 +259,7 @@ public final class LDRef {
      * @param vec The translation vector
      * @return This
      */
-    public LDRef translateGlobally(LDVec vec) {
+    public HDRef translateGlobally(HDVec vec) {
         dat[12] += dat[0] * vec.X() + dat[4] * vec.Y() + dat[8] * vec.Z();
         dat[13] += dat[1] * vec.X() + dat[5] * vec.Y() + dat[9] * vec.Z();
         dat[14] += dat[2] * vec.X() + dat[6] * vec.Y() + dat[10] * vec.Z();
@@ -273,8 +273,8 @@ public final class LDRef {
      * @param ang The rotation angle
      * @return This
      */
-    public LDRef rotateLocally(LDAng ang) {
-        float[] r = new float[9], d = new float[16];
+    public HDRef rotateLocally(HDAng ang) {
+        double[] r = new double[9], d = new double[16];
         r[0] = ang.cos() + ang.X() * ang.X() * (1 - ang.cos());
         r[1] = ang.Y() * ang.X() * (1 - ang.cos()) + ang.Z() * ang.sin();
         r[2] = ang.X() * ang.Z() * (1 - ang.cos()) - ang.Y() * ang.sin();
@@ -308,8 +308,8 @@ public final class LDRef {
      * @param vec The translation vector
      * @return This
      */
-    public LDRef rotateGlobally(LDAng ang) {
-        float[] r = new float[9], d = new float[16];
+    public HDRef rotateGlobally(HDAng ang) {
+        double[] r = new double[9], d = new double[16];
         r[0] = ang.cos() + ang.X() * ang.X() * (1 - ang.cos());
         r[1] = ang.Y() * ang.X() * (1 - ang.cos()) + ang.Z() * ang.sin();
         r[2] = ang.X() * ang.Z() * (1 - ang.cos()) - ang.Y() * ang.sin();
@@ -345,7 +345,7 @@ public final class LDRef {
      * @param ref The transformation frame
      * @return This
      */
-    public LDRef multiplyLocally(LDRef ref) { return mult(ref, this, this); }
+    public HDRef multiplyLocally(HDRef ref) { return mult(ref, this, this); }
     /**
      * Transforms this reference frame globally with the provided reference frame
      * transformation, that is before the transformation described by this frame,
@@ -354,7 +354,7 @@ public final class LDRef {
      * @param ref The transformation frame
      * @return This
      */
-    public LDRef multiplyGlobally(LDRef ref) { return mult(this, ref, this); }
+    public HDRef multiplyGlobally(HDRef ref) { return mult(this, ref, this); }
     
     /**
      * Returns the position vector transformed to inside this reference frame.
@@ -362,7 +362,7 @@ public final class LDRef {
      * @param vec The global position vector
      * @return The local position vector
      */
-    public LDVec transform(LDVec vec) {
+    public HDVec transform(HDVec vec) {
         return transform(vec, true);
     }
     /**
@@ -372,8 +372,8 @@ public final class LDRef {
      * @param position True if provided vector is a position vector
      * @return The local vector
      */
-    public LDVec transform(LDVec vec, boolean position) {
-        return new LDVec(
+    public HDVec transform(HDVec vec, boolean position) {
+        return new HDVec(
             dat[0] * vec.X() + dat[4] * vec.Y() + dat[8] * vec.Z() + (position ? dat[12] : 0f),
             dat[1] * vec.X() + dat[5] * vec.Y() + dat[9] * vec.Z() + (position ? dat[13] : 0f),
             dat[2] * vec.X() + dat[6] * vec.Y() + dat[10] * vec.Z() + (position ? dat[14] : 0f)
@@ -384,41 +384,41 @@ public final class LDRef {
      * @param ang The global angle
      * @return The local angle
      */
-    public LDAng transform(LDAng ang) {
+    public HDAng transform(HDAng ang) {
         return ang.set(transform(ang.vec(), false));
     }
     /**
      * Returns the global origin in the reference frame.
      * @return The local position of the global origin
      */
-    public LDVec getOrigin() {
-        return new LDVec(dat[12], dat[13], dat[14]);
+    public HDVec getOrigin() {
+        return new HDVec(dat[12], dat[13], dat[14]);
     }
     
     /**
-     * Returns a copy of this reference frame.
+     * Returns a copy of this reference frame in a <code>LDRef</code> object.
      * @return A copy of this.
      */
     public LDRef toLD() {
-        return new LDRef(this);
+        float[] d = new float[16];
+        for(int i = 0; i < dat.length; i++) {
+            d[i] = (float) dat[i];
+        }
+        return new LDRef(d);
     }
     /**
-     * Returns a copy of this reference frame in a <code>HDRef</code> object.
+     * Returns a copy of this reference frame.
      * @return A <code>HDRef</code> copy of this.
      */
     public HDRef toHD() {
-        double[] d = new double[16];
-        for(int i = 0; i < dat.length; i++) {
-            d[i] = dat[i];
-        }
-        return new HDRef(d);
+        return new HDRef(this);
     }
     
     /**
-     * Returns a read-only version of the matrix in a float-buffer.
+     * Returns a read-only version of the matrix in a double-buffer.
      * @return The matrix as a read-only buffer
      */
-    public FloatBuffer buffer() {
+    public DoubleBuffer buffer() {
         if (modified) {
             buffer.put(dat);
             buffer.flip();
@@ -427,16 +427,16 @@ public final class LDRef {
         return this.read_only;
     }
     /**
-     * Writes the 16 float matrix in major-column format into the byte buffer,
+     * Writes the 16 double matrix in major-column format into the byte buffer,
      * then returns the provided buffer.
      * @param bb The Buffer to write to
      * @return The Buffer written to
      */
     public ByteBuffer write(ByteBuffer bb) {
-        bb.putFloat(dat[ 0]).putFloat(dat[ 1]).putFloat(dat[ 2]).putFloat(dat[ 3])
-          .putFloat(dat[ 4]).putFloat(dat[ 5]).putFloat(dat[ 6]).putFloat(dat[ 7])
-          .putFloat(dat[ 8]).putFloat(dat[ 9]).putFloat(dat[10]).putFloat(dat[11])
-          .putFloat(dat[12]).putFloat(dat[13]).putFloat(dat[14]).putFloat(dat[15]);
+        bb.putDouble(dat[ 0]).putDouble(dat[ 1]).putDouble(dat[ 2]).putDouble(dat[ 3])
+          .putDouble(dat[ 4]).putDouble(dat[ 5]).putDouble(dat[ 6]).putDouble(dat[ 7])
+          .putDouble(dat[ 8]).putDouble(dat[ 9]).putDouble(dat[10]).putDouble(dat[11])
+          .putDouble(dat[12]).putDouble(dat[13]).putDouble(dat[14]).putDouble(dat[15]);
         return bb;
     }
     
@@ -453,19 +453,19 @@ public final class LDRef {
                 + " {" + dat[3] + "," + dat[7] + "," + dat[11] + "," + dat[15] + "}}";
     }
     /**
-     * Returns true only if the provided object is a <code>LDRef</code> object
+     * Returns true only if the provided object is a <code>HDRef</code> object
      * with the same transformation matrix as this.
      * @param obj The object check
      * @return If it is equivalent
      */
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof LDRef && Arrays.equals(dat, ((LDRef) obj).dat);
+        return obj instanceof HDRef && Arrays.equals(dat, ((HDRef) obj).dat);
     }
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + Arrays.hashCode(this.dat);
+        int hash = 3;
+        hash = 97 * hash + Arrays.hashCode(this.dat);
         return hash;
     }
 }

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.data;
+package com.auroraengine.data;
 
-import com.ajh1779.debug.AuroraLogs;
+import com.auroraengine.debug.AuroraLogs;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;

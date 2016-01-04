@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.stat;
+package com.auroraengine.stat;
 
 /**
  * A stat type for things like health, mana, and stamina.

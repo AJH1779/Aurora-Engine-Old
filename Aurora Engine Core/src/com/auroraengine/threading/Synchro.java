@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.threading;
+package com.auroraengine.threading;
 
-import com.ajh1779.debug.AuroraException;
-import com.ajh1779.debug.AuroraLogs;
+import com.auroraengine.debug.AuroraException;
+import com.auroraengine.debug.AuroraLogs;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

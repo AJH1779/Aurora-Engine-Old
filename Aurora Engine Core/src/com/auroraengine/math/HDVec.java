@@ -3,29 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.math;
+package com.auroraengine.math;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * <code>LDVec</code>s are modifiable objects that denote a translation in
- * Cartesian space using float precision.
+ * <code>HDVec</code>s are modifiable objects that denote a translation in
+ * Cartesian space using double precision.
  * It is important to duplicate the object whenever making modifications that
  * are not to be reflected in the original.
  * @author Arthur
  */
-public final class LDVec {
-    // The Static Methods
+public final class HDVec {
+    // The Static Method classes
     /**
      * Returns the average of the vectors, that is the sum of all vectors
      * divided by the number of vectors provided.
      * @param vecs The vectors to average.
      * @return The average vector.
      */
-    public static LDVec getAverage(LDVec... vecs) {
-        LDVec avg = new LDVec();
-        for(LDVec vec : vecs) {
+    public static HDVec getAverage(HDVec... vecs) {
+        HDVec avg = new HDVec();
+        for(HDVec vec : vecs) {
             avg.translate(vec);
         }
         return avg.invscale(vecs.length);
@@ -37,8 +37,8 @@ public final class LDVec {
      * @param B The destination point
      * @return The translation vector
      */
-    public static LDVec getDistVec(LDVec A, LDVec B) {
-        return new LDVec(B).negTranslate(A);
+    public static HDVec getDistVec(HDVec A, HDVec B) {
+        return new HDVec(B).negTranslate(A);
     }
     /**
      * Returns the distance between A and B. This is equivalent to getting
@@ -47,7 +47,7 @@ public final class LDVec {
      * @param B The destination point
      * @return The separation
      */
-    public static double getDist(LDVec A, LDVec B) {
+    public static double getDist(HDVec A, HDVec B) {
         return Math.sqrt(getSqrDist(A, B));
     }
     /**
@@ -57,7 +57,7 @@ public final class LDVec {
      * @param B The destination point
      * @return The separation squared
      */
-    public static float getSqrDist(LDVec A, LDVec B) {
+    public static double getSqrDist(HDVec A, HDVec B) {
         return getDistVec(A, B).getSqrLen();
     }
     
@@ -65,77 +65,77 @@ public final class LDVec {
     /**
      * Creates a new vector of zero length.
      */
-    public LDVec() {}
+    public HDVec() {}
     /**
      * Creates a new vector with the provided X and Y components and zero for
      * the Z component.
      * @param x The X component
      * @param y The Y component
      */
-    public LDVec(float x, float y) { set(x, y, 0.0f); }
+    public HDVec(double x, double y) { set(x, y, 0.0); }
     /**
      * Creates a new vector with the provided X, Y, and Z components
      * @param x The X component
      * @param y The Y component
      * @param z The Z component
      */
-    public LDVec(float x, float y, float z) { set(x, y, z); }
+    public HDVec(double x, double y, double z) { set(x, y, z); }
     /**
      * Creates a new vector which has the same X, Y, and Z components as the
      * provided vector.
      * @param vec The vector to copy.
      */
-    public LDVec(LDVec vec) { set(vec); }
-    private final float[] data = new float[3];
+    public HDVec(HDVec vec) { set(vec); }
+    private final double[] data = new double[3];
     
     /**
      * Returns the X component of this vector.
      * @return The X component
      */
-    public float X() { return data[0]; }
+    public double X() { return data[0]; }
     /**
      * Returns the Y component of this vector.
      * @return The Y component
      */
-    public float Y() { return data[1]; }
+    public double Y() { return data[1]; }
     /**
      * Returns the Z component of this vector.
      * @return The Z component
      */
-    public float Z() { return data[2]; }
+    public double Z() { return data[2]; }
     /**
      * Returns the array which stores the X, Y, and Z components of this vector.
      * Modifying this modifies the components in this vector.
      * @return 
      */
-    public float[] array() { return data; }
+    public double[] array() { return data; }
     /**
      * Places the X, Y, and Z components into the provided buffer in that order,
      * then returns the provided buffer.
      * @param bb The Buffer
      * @return The Provided Buffer
      */
-    public ByteBuffer write(ByteBuffer bb)
-    { bb.putFloat(data[0]); bb.putFloat(data[1]); bb.putFloat(data[2]); return bb; }
+    public ByteBuffer data(ByteBuffer bb)
+    { bb.putDouble(data[0]); bb.putDouble(data[1]); bb.putDouble(data[2]); return bb; }
     
     /**
      * Sets the X component to the provided value, then returns this vector.
      * @param x The new X component
      * @return This
      */
-    public LDVec X(float x) { data[0] = x; return this; }
+    public HDVec X(double x) { data[0] = x; return this; }
     /**
      * Sets the Y component to the provided value, then returns this vector.
      * @param y The new Y component
      * @return This
      */
-    public LDVec Y(float y) { data[1] = y; return this; }
+    public HDVec Y(double y) { data[1] = y; return this; }
     /**
      * Sets the Z component to the provided value, then returns this vector.
      * @param z The new Z component
      * @return This
      */
-    public LDVec Z(float z) { data[2] = z; return this; }
+    public HDVec Z(double z) { data[2] = z; return this; }
     /**
      * Sets the X, Y, and Z components to the provided values, then returns this
      * vector.
@@ -144,7 +144,7 @@ public final class LDVec {
      * @param z The new Z component
      * @return This
      */
-    public LDVec set(float x, float y, float z)
+    public HDVec set(double x, double y, double z)
     { data[0] = x; data[1] = y; data[2] = z; return this; }
     /**
      * Sets the X, Y, and Z components to those of the provided vector, then
@@ -152,7 +152,7 @@ public final class LDVec {
      * @param v The vector to copy
      * @return This
      */
-    public LDVec set(LDVec v)
+    public HDVec set(HDVec v)
     { data[0] = v.data[0]; data[1] = v.data[1]; data[2] = v.data[2]; return this; }
     /**
      * Returns the length of this vector. If used for comparison, try using the
@@ -165,7 +165,7 @@ public final class LDVec {
      * length.
      * @return The square length
      */
-    public float getSqrLen() { return dot(this); }
+    public double getSqrLen() { return dot(this); }
     
     /**
      * Adds the provided X, Y, and Z values to the corresponding components
@@ -176,7 +176,7 @@ public final class LDVec {
      * @param z The Z component to add
      * @return This
      */
-    public LDVec translate(float x, float y, float z)
+    public HDVec translate(double x, double y, double z)
     { data[0] += x; data[1] += y; data[2] += z; return this; }
     /**
      * Adds the provided vector to this vector, then returns this. This has the
@@ -184,7 +184,7 @@ public final class LDVec {
      * @param v The translation vector
      * @return This
      */
-    public LDVec translate(LDVec v)
+    public HDVec translate(HDVec v)
     { data[0] += v.data[0]; data[1] += v.data[1]; data[2] += v.data[2]; return this; }
     /**
      * Subtracts the provided vector to this vector, then returns this. This has
@@ -192,7 +192,7 @@ public final class LDVec {
      * @param v The translation vector
      * @return This
      */
-    public LDVec negTranslate(LDVec v)
+    public HDVec negTranslate(HDVec v)
     { data[0] -= v.data[0]; data[1] -= v.data[1]; data[2] -= v.data[2]; return this; }
     /**
      * Scales all components in this vector by the specified scale factor, then
@@ -200,7 +200,7 @@ public final class LDVec {
      * @param s The scale factor
      * @return This
      */
-    public LDVec scale(float s)
+    public HDVec scale(double s)
     { data[0] *= s; data[1] *= s; data[2] *= s; return this; }
     /**
      * Scales all components in this vector by the inverse of the specified
@@ -208,7 +208,7 @@ public final class LDVec {
      * @param s The inverse of the scale factor
      * @return This
      */
-    public LDVec invscale(float s)
+    public HDVec invscale(double s)
     { return scale(1.0f / s); }
     
     /**
@@ -216,7 +216,7 @@ public final class LDVec {
      * @param v The second vector
      * @return The dot product
      */
-    public float dot(LDVec v)
+    public double dot(HDVec v)
     { return data[0] * v.data[0] + data[1] * v.data[1] + data[2] * v.data[2]; }
     /**
      * Returns the cross product of this vector and the specified vector as a
@@ -225,8 +225,8 @@ public final class LDVec {
      * @param v The second vector
      * @return The cross product vector
      */
-    public LDVec cross(LDVec v)
-    { return new LDVec(data[1] * v.data[2] - data[2] * v.data[1],
+    public HDVec cross(HDVec v)
+    { return new HDVec(data[1] * v.data[2] - data[2] * v.data[1],
                        data[2] * v.data[0] - data[0] * v.data[2],
                        data[0] * v.data[1] - data[1] * v.data[0]); }
     
@@ -234,12 +234,12 @@ public final class LDVec {
      * Normalises this vector (sets the length to 1), then returns this.
      * @return This
      */
-    public LDVec normalise() { return invscale((float) getLen()); }
+    public HDVec normalise() { return invscale((double) getLen()); }
     /**
      * Scales this vector by -1, then returns this.
      * @return This
      */
-    public LDVec negative() { return scale(-1.0f); }
+    public HDVec negative() { return scale(-1.0f); }
     /**
      * Reflects this vector through the plane defined by the provided normal
      * vector, then returns this. If the provided vector is not normalised, the
@@ -247,32 +247,24 @@ public final class LDVec {
      * @param n The plane normal vector.
      * @return This
      */
-    public LDVec reflect(LDVec n) {
+    public HDVec reflect(HDVec n) {
         return set(
-            (1.0F - 2.0F * n.data[0] * n.data[0]) * data[0]         - 2.0F * n.data[0] * n.data[1]  * data[1]         - 2.0F * n.data[0] * n.data[2]  * data[2],
-                  - 2.0F * n.data[0] * n.data[1]  * data[0] + (1.0F - 2.0F * n.data[1] * n.data[1]) * data[1]         - 2.0F * n.data[1] * n.data[2]  * data[2],
-                  - 2.0F * n.data[0] * n.data[2]  * data[0]         - 2.0F * n.data[1] * n.data[2]  * data[1] + (1.0F - 2.0F * n.data[2] * n.data[2]) * data[2]);
-    }
-    /**
-     * Sets each component to the remainder of the division by the corresponding
-     * component in the provided vector, then returns this.
-     * @param n The wrapping vector
-     * @return This
-     */
-    public LDVec remainder(LDVec n) {
-        return set(data[0] % n.data[0], data[1] % n.data[1], data[2] % n.data[2]);
+            (1.0 - 2.0 * n.data[0] * n.data[0]) * data[0]        - 2.0 * n.data[0] * n.data[1]  * data[1]        - 2.0 * n.data[0] * n.data[2]  * data[2],
+                 - 2.0 * n.data[0] * n.data[1]  * data[0] + (1.0 - 2.0 * n.data[1] * n.data[1]) * data[1]        - 2.0 * n.data[1] * n.data[2]  * data[2],
+                 - 2.0 * n.data[0] * n.data[2]  * data[0]        - 2.0 * n.data[1] * n.data[2]  * data[1] + (1.0 - 2.0 * n.data[2] * n.data[2]) * data[2]);
     }
     
+    /**
+     * Returns a copy of this vector as a <code>LDVec</code>.
+     * @return A copy of This
+     */
+    public LDVec toLD() { return new LDVec((float) data[0], (float) data[1],
+            (float) data[2]); }
     /**
      * Returns a copy of this vector.
      * @return A copy of This
      */
-    public LDVec toLD() { return new LDVec(this); }
-    /**
-     * Returns a copy of this vector as a <code>HDVec</code>.
-     * @return A copy of This
-     */
-    public HDVec toHD() { return new HDVec(data[0], data[1], data[2]); }
+    public HDVec toHD() { return new HDVec(this); }
     
     /**
      * Returns this vector as a string in the format "(x,y,z)", where x, y, and
@@ -284,7 +276,7 @@ public final class LDVec {
         return "(" + data[0] + "," + data[1] + "," + data[2] + ")";
     }
     /**
-     * Returns true if the provided object is a <code>LDVec</code> with the
+     * Returns true if the provided object is a <code>HDVec</code> with the
      * same components as this. Use a comparison of square separation with some
      * tolerance to determine when two vectors are similar
      * @param obj The object to check
@@ -292,7 +284,7 @@ public final class LDVec {
      */
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof LDVec && Arrays.equals(data, ((LDVec) obj).data);
+        return obj instanceof HDVec && Arrays.equals(data, ((HDVec) obj).data);
     }
     @Override
     public int hashCode() {
