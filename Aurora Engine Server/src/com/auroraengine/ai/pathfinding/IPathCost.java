@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ajh1779.ai.pathfinding;
+package com.auroraengine.ai.pathfinding;
 
 /**
  *
