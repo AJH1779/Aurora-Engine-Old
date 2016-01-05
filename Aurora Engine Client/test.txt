@@ -1,0 +1,13 @@
+windowed_height : 480
+vsync : false
+set_display_config : false
+title : GL Window
+fullscreen_width : -1
+fullscreen_height : -1
+fullscreen_sync : -1
+brightness : 0.0
+fullscreen : false
+contrast : 0.5
+resizeable : true
+gamma : 0.5
+windowed_width : 640

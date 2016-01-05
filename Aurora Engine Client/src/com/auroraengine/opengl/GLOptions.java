@@ -16,14 +16,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Arthur
  */
 public final class GLOptions {
+	private GLOptions() {}
 	public GLOptions(Session session, Properties properties) {
 		
 	}
@@ -33,6 +32,7 @@ public final class GLOptions {
 	private final HashMap<String, Object> data = new HashMap<String, Object>(){{
 		put("title", "GL Window");
 		put("windowed_width", 640); put("windowed_height", 480);
+		put("fullscreen", false);
 		put("fullscreen_width", -1); put("fullscreen_height", -1);
 		put("fullscreen_sync", -1);
 		put("resizeable", true);
@@ -42,11 +42,6 @@ public final class GLOptions {
 		put("gamma", 0.5f);
 		put("brightness", 0.0f);
 		put("contrast", 0.5f);
-		
-		put("alpha_threshold", 0.5f);
-		
-		put("alpha_test", false);
-		put("depth_test", true);
 	}};
 	
 	public String getString(String key) throws AuroraException {
@@ -56,17 +51,17 @@ public final class GLOptions {
 			throw new AuroraException(ex);
 		}
 	}
-	public Boolean getBoolean(String key) throws AuroraException {
+	public Boolean getBoolean(String key) {
 		try { return (Boolean) data.get(key); }
-		catch (ClassCastException ex) { throw new AuroraException(ex); }
+		catch (ClassCastException ex) { return false; }
 	}
-	public Integer getInteger(String key) throws AuroraException {
+	public Integer getInteger(String key) {
 		try { return (Integer) data.get(key); }
-		catch (ClassCastException ex) { throw new AuroraException(ex); }
+		catch (ClassCastException ex) { return 0; }
 	}
-	public Float getFloat(String key) throws AuroraException {
+	public Float getFloat(String key) {
 		try { return (Float) data.get(key); }
-		catch (ClassCastException ex) { throw new AuroraException(ex); }
+		catch (ClassCastException ex) { return 1.0f; }
 	}
 	public void set(String key, Object val) {
 		data.put(key, val);
@@ -95,9 +90,9 @@ public final class GLOptions {
 				if(line.contains(" : ")) {
 					key = line.substring(0, line.indexOf(" "));
 					val = line.substring(line.indexOf(" : ") + 3);
-					if(val.matches("[0-9]+")) {
+					if(val.matches("-?[0-9]+")) {
 						data.put(key, Integer.valueOf(val));
-					} else if(val.matches("[0-9]*.[0-9]*(E[0-9]+)?")) {
+					} else if(val.matches("-?[0-9]*.[0-9]*(E[0-9]+)?")) {
 						data.put(key, Float.valueOf(val));
 					} else if(val.matches("(true|false)")) {
 						data.put(key, val.matches("true"));
@@ -109,5 +104,23 @@ public final class GLOptions {
 		} catch (IOException ex) {
 			throw new AuroraException(ex);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("GLOptions:").append(System.lineSeparator());
+		data.forEach((k,v) -> {
+			b.append(k).append(" : ").append("(").append(v.getClass().getSimpleName()).append(") ").append(v.toString().replace(System.lineSeparator(), "\\n")).append(System.lineSeparator());
+		});
+		
+		return b.toString();
+	}
+	
+	public static void main(String[] args) throws AuroraException {
+		GLOptions ops = new GLOptions();
+		ops.saveTo(new File("test.txt"));
+		ops.loadFrom(new File("test.txt"));
+		System.out.println(ops);
 	}
 }

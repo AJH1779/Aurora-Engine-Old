@@ -8,8 +8,6 @@ package com.auroraengine.opengl;
 import com.auroraengine.client.Session;
 import com.auroraengine.data.Properties;
 import com.auroraengine.debug.AuroraException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -19,8 +17,13 @@ import org.lwjgl.opengl.GL11;
  *
  * @author Arthur
  */
-class LWJGLWindow implements GLWindow {
-
+public class LWJGLWindow implements GLWindow {
+	/**
+	 * Creates a window using the native LWJGL window package, using the specified
+	 * properties and session settings.
+	 * @param session
+	 * @param properties 
+	 */
 	public LWJGLWindow(Session session, Properties properties) {
 		ops = new GLOptions(session, properties);
 	}
@@ -37,7 +40,7 @@ class LWJGLWindow implements GLWindow {
 		}
 		
 		// Then there is the generic GL Initialisation
-		GLWindow.updateGL(ops);
+		GLWindow.updateGL();
 	}
 	private void updateDisplay() throws LWJGLException, AuroraException {
 		if(ops.getBoolean("set_display_config"))
@@ -90,9 +93,10 @@ class LWJGLWindow implements GLWindow {
 			// Perform a screen update
 			ops.set(next_options);
 			next_options = null;
-			try { updateDisplay(); GLWindow.updateGL(ops); }
+			try { updateDisplay(); }
 			catch (LWJGLException ex) { throw new AuroraException(ex); }
 		}
+		// Remove this and move to the camera?
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -104,7 +108,6 @@ class LWJGLWindow implements GLWindow {
 	public void setGLOptions(GLOptions new_ops) {
 		next_options = new_ops;
 	}
-
 	@Override
 	public void destroy() {
 		Display.destroy();

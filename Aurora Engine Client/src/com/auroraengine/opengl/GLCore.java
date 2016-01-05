@@ -40,7 +40,6 @@ public class GLCore extends Synchro {
     @Override
     protected void update() throws AuroraException {
         window.update();
-        
     }
     @Override
     protected void shutdown() {

@@ -20,19 +20,12 @@ public interface GLWindow {
 	public void setGLOptions(GLOptions new_ops);
 	public void destroy();
 	
-	public static void updateGL(GLOptions ops) throws AuroraException {
-		GL11.glAlphaFunc(GL11.GL_GEQUAL, ops.getFloat("alpha_threshold"));
+	// TODO: Tie this to the cameras rather than having it as a separate thing.
+	public static void updateGL() throws AuroraException {
+		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.5f);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		
-		if(ops.getBoolean("alpha_test")) {
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-		} else {
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-		}
-		if(ops.getBoolean("depth_test")) {
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-		} else {
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-		}
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 }
