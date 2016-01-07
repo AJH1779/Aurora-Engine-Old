@@ -9,7 +9,7 @@ package com.auroraengine.debug;
  *
  * @author Arthur
  */
-public class AuroraException extends Exception {
+public abstract class AuroraException extends Exception {
     public AuroraException() {}
     public AuroraException(String msg) {
         super(msg);
