@@ -12,7 +12,6 @@ import com.auroraengine.opengl.GLCore;
 import com.auroraengine.threading.Synchro;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.Sys;
 
 /**
  *
@@ -21,9 +20,16 @@ import org.lwjgl.Sys;
 public class ClientCore extends Synchro {
     private static final Logger LOG = AuroraLogs.getLogger(ClientCore.class);
     
-    public ClientCore(Properties props, Session session) throws AuroraException {
+		/**
+		 * Creates a client core with the specified program properties and the
+		 * provided user session.
+		 * @param properties The program properties.
+		 * @param session The user session.
+		 * @throws AuroraException 
+		 */
+    public ClientCore(Properties properties, Session session) throws AuroraException {
         super("Client Core");
-        this.properties = props;
+        this.properties = properties;
         this.session = session;
         this.glcore = new GLCore(this);
     }
@@ -31,21 +37,29 @@ public class ClientCore extends Synchro {
     private final Session session;
     private final GLCore glcore;
     
-    public Properties getProperties() { return properties; }
-    public Session getSession() { return session; }
+		/**
+		 * Returns the program properties.
+		 * @return The program properties.
+		 */
+    public final Properties getProperties() { return properties; }
+		/**
+		 * Returns the user session.
+		 * @return The user session.
+		 */
+    public final Session getSession() { return session; }
     
     @Override
-    protected void initialise() throws AuroraException {
+    protected void initialise() throws ClientException {
         LOG.info("Initialising");
         waitForStart(glcore, 8);
         LOG.info("Initialised");
     }
     @Override
-    protected boolean isRunning() throws AuroraException {
+    protected boolean isRunning() throws ClientException {
         return glcore.getThreading();
     }
     @Override
-    protected void update() throws AuroraException {
+    protected void update() throws ClientException {
         
     }
     @Override

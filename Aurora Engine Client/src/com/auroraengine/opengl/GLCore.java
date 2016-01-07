@@ -28,17 +28,17 @@ public class GLCore extends Synchro {
     private final GLWindow window;
 
     @Override
-    protected void initialise() throws AuroraException {
+    protected void initialise() throws GLException {
         LOG.info("Initialising");
         window.create();
         LOG.info("Initialised");
     }
     @Override
-    protected boolean isRunning() throws AuroraException {
+    protected boolean isRunning() throws GLException {
         return !window.isCloseRequested();
     }
     @Override
-    protected void update() throws AuroraException {
+    protected void update() throws GLException {
         window.update();
     }
     @Override

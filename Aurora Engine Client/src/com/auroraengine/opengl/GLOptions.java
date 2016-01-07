@@ -5,9 +5,9 @@
  */
 package com.auroraengine.opengl;
 
+import com.auroraengine.client.ClientException;
 import com.auroraengine.client.Session;
 import com.auroraengine.data.Properties;
-import com.auroraengine.debug.AuroraException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,11 +44,11 @@ public final class GLOptions {
 		put("contrast", 0.5f);
 	}};
 	
-	public String getString(String key) throws AuroraException {
+	public String getString(String key) {
 		try {
 			return (String) data.get(key);
 		} catch (ClassCastException ex) {
-			throw new AuroraException(ex);
+			return null;
 		}
 	}
 	public Boolean getBoolean(String key) {
@@ -71,7 +71,7 @@ public final class GLOptions {
 		data.putAll(ops.data);
 	}
 	
-	public void saveTo(File f) throws AuroraException {
+	public void saveTo(File f) throws ClientException {
 		try (BufferedWriter out = new BufferedWriter(new FileWriter(f))) {
 			for(Entry<String,Object> ent : data.entrySet()) {
 				out.write(ent.getKey() + " : " + ent.getValue().toString()
@@ -79,10 +79,10 @@ public final class GLOptions {
 				out.newLine();
 			}
 		} catch (IOException ex) {
-			throw new AuroraException(ex);
+			throw new ClientException(ex);
 		}
 	}
-	public void loadFrom(File f) throws AuroraException {
+	public void loadFrom(File f) throws ClientException {
 		data.clear();
 		try (BufferedReader in = new BufferedReader(new FileReader(f))) {
 			for(String line = in.readLine(); line != null; line = in.readLine()) {
@@ -102,7 +102,7 @@ public final class GLOptions {
 				}
 			}
 		} catch (IOException ex) {
-			throw new AuroraException(ex);
+			throw new ClientException(ex);
 		}
 	}
 	
@@ -117,7 +117,7 @@ public final class GLOptions {
 		return b.toString();
 	}
 	
-	public static void main(String[] args) throws AuroraException {
+	public static void main(String[] args) throws ClientException {
 		GLOptions ops = new GLOptions();
 		ops.saveTo(new File("test.txt"));
 		ops.loadFrom(new File("test.txt"));

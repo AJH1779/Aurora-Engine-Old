@@ -31,18 +31,23 @@ public class LWJGLWindow implements GLWindow {
 	private GLOptions next_options;
 
 	@Override
-	public void create() throws AuroraException {
+	public void load() {}
+	@Override
+	public void unload() {}
+	
+	@Override
+	public void create() throws GLException {
 		try {
 			updateDisplay();
 			Display.create();
 		} catch (LWJGLException ex) {
-			throw new AuroraException(ex);
+			throw new GLException(ex);
 		}
 		
 		// Then there is the generic GL Initialisation
 		GLWindow.updateGL();
 	}
-	private void updateDisplay() throws LWJGLException, AuroraException {
+	private void updateDisplay() throws LWJGLException, GLException {
 		if(ops.getBoolean("set_display_config"))
 			Display.setDisplayConfiguration(ops.getFloat("gamma"),
 							ops.getFloat("brightness"), ops.getFloat("contrast"));
@@ -82,19 +87,19 @@ public class LWJGLWindow implements GLWindow {
 	}
 
 	@Override
-	public boolean isCloseRequested() throws AuroraException {
+	public boolean isCloseRequested() throws GLException {
 		return Display.isCloseRequested();
 	}
 
 	@Override
-	public void update() throws AuroraException {
+	public void update() throws GLException {
 		Display.update();
 		if(next_options != null) {
 			// Perform a screen update
 			ops.set(next_options);
 			next_options = null;
 			try { updateDisplay(); }
-			catch (LWJGLException ex) { throw new AuroraException(ex); }
+			catch (LWJGLException ex) { throw new GLException(ex); }
 		}
 		// Remove this and move to the camera?
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
